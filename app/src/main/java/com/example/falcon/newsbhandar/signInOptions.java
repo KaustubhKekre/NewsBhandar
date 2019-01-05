@@ -22,36 +22,44 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class signInOptions extends AppCompatActivity {
-    private final int RC_SIGN_IN=1;
+public class signInOptions extends AppCompatActivity implements View.OnClickListener {
+    private final int RC_SIGN_IN = 1;
     private GoogleSignInClient mGoogleSignInClient;
     FirebaseAuth mAuth;
-
     SignInButton googleSignIn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_display);
-        mAuth=FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-        mGoogleSignInClient=GoogleSignIn.getClient(signInOptions.this,gso);
-        googleSignIn=(SignInButton)findViewById(R.id.googleSignIn);
-        googleSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signIn();
-            }
-        });
-
-
+        mGoogleSignInClient = GoogleSignIn.getClient(signInOptions.this, gso);
+        googleSignIn = (SignInButton) findViewById(R.id.googleSignIn);
+        googleSignIn.setOnClickListener(this);
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.googleSignIn:
+                signIn();
+                break;
+            default:
+                Toast.makeText(signInOptions.this, "Impropper selection", Toast.LENGTH_LONG).show();
+
+        }
+    }
+
+    // Google SignIN Start
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -87,7 +95,7 @@ public class signInOptions extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("sigIn result", "signInWithCredential:failure", task.getException());
-                            Toast.makeText(signInOptions.this,"SignIn Failed",Toast.LENGTH_LONG).show();
+                            Toast.makeText(signInOptions.this, "SignIn Failed", Toast.LENGTH_LONG).show();
                             updateUI(null);
                         }
 
@@ -99,9 +107,12 @@ public class signInOptions extends AppCompatActivity {
     private void updateUI(FirebaseUser user) {
 
 
-            Intent gSignIn = new Intent(signInOptions.this,MainActivity.class);
-            startActivity(gSignIn);
-            finish();
-        }
+        Intent gSignIn = new Intent(signInOptions.this, MainActivity.class);
+        startActivity(gSignIn);
+        finish();
     }
+    //Google SignIn End
+
+
+}
 
