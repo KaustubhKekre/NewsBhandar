@@ -2,10 +2,12 @@ package com.example.falcon.newsbhandar;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -27,11 +29,13 @@ public class signInOptions extends AppCompatActivity implements View.OnClickList
     private GoogleSignInClient mGoogleSignInClient;
     FirebaseAuth mAuth;
     SignInButton googleSignIn;
+    Button pnoSignIn;
+    FragmentManager fm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_display);
+        setContentView(R.layout.sign_in_options);
         mAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -40,6 +44,9 @@ public class signInOptions extends AppCompatActivity implements View.OnClickList
         mGoogleSignInClient = GoogleSignIn.getClient(signInOptions.this, gso);
         googleSignIn = (SignInButton) findViewById(R.id.googleSignIn);
         googleSignIn.setOnClickListener(this);
+        pnoSignIn=findViewById(R.id.pnoSignIn);
+        pnoSignIn.setOnClickListener(this);
+        fm=getSupportFragmentManager();
     }
 
     @Override
@@ -48,6 +55,10 @@ public class signInOptions extends AppCompatActivity implements View.OnClickList
             case R.id.googleSignIn:
                 signIn();
                 break;
+            case R.id.pnoSignIn:
+                fm.beginTransaction().replace(R.id.mainFrag,new pNoFrag()).addToBackStack(null).commit();
+                break;
+
             default:
                 Toast.makeText(signInOptions.this, "Impropper selection", Toast.LENGTH_LONG).show();
 
