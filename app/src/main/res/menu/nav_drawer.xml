@@ -3,18 +3,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
     <group android:checkableBehavior="single">
-        <item android:title="sports"
-            android:id="@+id/nav_sports"
+        <item android:title="Headlines"
+            android:id="@+id/nav_headline"
             />
-        <item android:title="all"
-            android:id="@+id/nav_all"
+        <item android:title="General"
+            android:id="@+id/nav_general"
             />
+        <item android:title="Science"
+            android:id="@+id/nav_science"
+            />
+        <item android:title="Technology"
+            android:id="@+id/nav_technology"
+            />
+        <item android:title="Entertainment"
+            android:id="@+id/nav_entertainment"
+            />
+        <item android:title="Business"
+            android:id="@+id/nav_business"
+            />
+        <item android:title="Health"
+            android:id="@+id/nav_health"
+            />
+        <item android:title="Sports"
+            android:id="@+id/nav_sport"
+            />
+
     </group>
-    <item android:title="different"
+    <item android:title="Settings"
         >
         <menu>
-            <item android:title="science"
-                android:id="@+id/nav_science"/>
+            <item android:title="Change Country"
+                android:id="@+id/nav_cCountry"/>
+            <item android:title="Settings"
+                android:id="@+id/nav_settings"
+                />
 
         </menu>
     </item>

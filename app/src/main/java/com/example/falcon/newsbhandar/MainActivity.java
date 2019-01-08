@@ -7,8 +7,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,11 +25,11 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Business.OnFragmentInteractionListener,Entertainment.OnFragmentInteractionListener,General.OnFragmentInteractionListener,Headlines.OnFragmentInteractionListener,Health.OnFragmentInteractionListener,Science.OnFragmentInteractionListener,Sports.OnFragmentInteractionListener,Technology.OnFragmentInteractionListener {
 
     FirebaseAuth mAuth;
     FirebaseUser mUser;
-    TextView name, email, tempCountry,countryNameDraw;
+    TextView name, email,countryNameDraw;
     ImageView img;
     String uName, uEmail;
     private DrawerLayout main_nav_drawer;
@@ -52,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
             finish();
         } else {
             setContentView(R.layout.activity_main);
-            tempCountry = findViewById(R.id.tempCountry);
             android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolBar);
             setSupportActionBar(toolbar);
             mAuth = FirebaseAuth.getInstance();
@@ -75,7 +76,39 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    tempCountry.setText(selectedCountry);
+                    TabLayout layout=findViewById(R.id.TabLayout);
+                    layout.addTab(layout.newTab().setText("Headlines"));
+                    layout.addTab(layout.newTab().setText("General"));
+                    layout.addTab(layout.newTab().setText("Science"));
+                    layout.addTab(layout.newTab().setText("Technology"));
+                    layout.addTab(layout.newTab().setText("Entertainment"));
+                    layout.addTab(layout.newTab().setText("Business"));
+                    layout.addTab(layout.newTab().setText("Health"));
+                    layout.addTab(layout.newTab().setText("Sports"));
+
+                    final ViewPager viewPager=findViewById(R.id.ViewPager);
+                    final PagerAdapter adapter=new PagerAdapter(getSupportFragmentManager(),layout.getTabCount());
+                    viewPager.setAdapter(adapter);
+                    viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(layout));
+                    layout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                        @Override
+                        public void onTabSelected(TabLayout.Tab tab) {
+                            viewPager.setCurrentItem(tab.getPosition());
+
+                        }
+
+                        @Override
+                        public void onTabUnselected(TabLayout.Tab tab) {
+
+                        }
+
+                        @Override
+                        public void onTabReselected(TabLayout.Tab tab) {
+
+                        }
+                    });
+
+
                     android.support.v7.app.ActionBarDrawerToggle toggle = new android.support.v7.app.ActionBarDrawerToggle(this, main_nav_drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
                     main_nav_drawer.addDrawerListener(toggle);
                     toggle.syncState();
@@ -128,5 +161,10 @@ public class MainActivity extends AppCompatActivity {
                     haveConnectedMobile = true;
         }
         return haveConnectedWifi || haveConnectedMobile;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }

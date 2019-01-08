@@ -123,7 +123,4 @@ public class signInOptions extends AppCompatActivity implements View.OnClickList
         finish();
     }
     //Google SignIn End
-
-
 }
-
