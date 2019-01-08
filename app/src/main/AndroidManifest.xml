@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.falcon.newsbhandar">
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -9,7 +10,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        >
         <activity android:name=".MainActivity"
             >
             <intent-filter>
@@ -19,7 +21,18 @@
             </intent-filter>
         </activity>
         <activity android:name=".signInOptions"
+            android:theme="@style/temp"
+            android:label="Sign In">
+
+        </activity>
+        <activity android:name=".countrySelection"
+            android:configChanges="orientation|screenSize"
             >
+
+        </activity>
+        <activity android:name=".errorConnect"
+            android:theme="@style/temp"
+            android:label="No Internet Connection">
 
         </activity>
     </application>

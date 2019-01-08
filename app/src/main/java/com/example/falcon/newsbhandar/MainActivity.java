@@ -1,6 +1,10 @@
 package com.example.falcon.newsbhandar;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -23,58 +27,79 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
     FirebaseUser mUser;
-    TextView name, email;
+    TextView name, email, tempCountry,countryNameDraw;
     ImageView img;
     String uName, uEmail;
     private DrawerLayout main_nav_drawer;
     Uri uImg;
+    boolean connection;
     NavigationView nav_View;
+    static SharedPreferences pref;
+    static SharedPreferences.Editor editor;
+    String selectedCountry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        editor = pref.edit();
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolBar);
-        setSupportActionBar(toolbar);
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
-        main_nav_drawer = findViewById(R.id.main_nav_drawer);
-        nav_View = findViewById(R.id.nav_view);
-        View headerView = nav_View.getHeaderView(0);
-        name = headerView.findViewById(R.id.name);
-        email = headerView.findViewById(R.id.email);
-        img = headerView.findViewById(R.id.img);
-        if (mUser == null) {
-            startActivity(new Intent(MainActivity.this, signInOptions.class));
+        connection = haveNetworkConnection();
+        if (connection == false) {
+            Toast.makeText(MainActivity.this, "Please check your internet connection and try again", Toast.LENGTH_LONG).show();
+            Intent intent=new Intent(MainActivity.this,errorConnect.class);
+            startActivity(intent);
             finish();
         } else {
-            android.support.v7.app.ActionBarDrawerToggle toggle = new android.support.v7.app.ActionBarDrawerToggle(this, main_nav_drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            main_nav_drawer.addDrawerListener(toggle);
-            toggle.syncState();
-            uName = mUser.getDisplayName();
-            if(!uName.isEmpty()){
-                name.setText(uName);
-            }
-            else
-            {
-                name.setText("User");
-            }
-            uEmail = mUser.getEmail();
-            if(!uEmail.isEmpty())
-            {
-                email.setText(uEmail);
-            }
-            else
-            {
-                email.setVisibility(View.GONE);
-            }
-            uImg = mUser.getPhotoUrl();
-            if(uImg!=null){
-                Glide.with(MainActivity.this)
-                        .load(uImg)
-                        .into(img);
+            setContentView(R.layout.activity_main);
+            tempCountry = findViewById(R.id.tempCountry);
+            android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolBar);
+            setSupportActionBar(toolbar);
+            mAuth = FirebaseAuth.getInstance();
+            mUser = mAuth.getCurrentUser();
+            main_nav_drawer = findViewById(R.id.main_nav_drawer);
+            nav_View = findViewById(R.id.nav_view);
+            View headerView = nav_View.getHeaderView(0);
+            name = headerView.findViewById(R.id.name);
+            email = headerView.findViewById(R.id.email);
+            img = headerView.findViewById(R.id.img);
+            countryNameDraw=headerView.findViewById(R.id.countryNameDraw);
 
+            if (mUser == null) {
+                startActivity(new Intent(MainActivity.this, signInOptions.class));
+                finish();
+            } else {
+                selectedCountry = pref.getString("country", null);
+                if (selectedCountry == null) {
+                    Intent intent = new Intent(MainActivity.this, countrySelection.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    tempCountry.setText(selectedCountry);
+                    android.support.v7.app.ActionBarDrawerToggle toggle = new android.support.v7.app.ActionBarDrawerToggle(this, main_nav_drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                    main_nav_drawer.addDrawerListener(toggle);
+                    toggle.syncState();
+                    uName = mUser.getDisplayName();
+                    if (uName!=null) {
+                        name.setText(uName);
+                    } else {
+                        name.setText("User");
+                    }
+                    uEmail = mUser.getEmail();
+                    if (uEmail!=null) {
+                        email.setText(uEmail);
+                    } else {
+                        email.setVisibility(View.GONE);
+                    }
+                    uImg = mUser.getPhotoUrl();
+                    countryNameDraw.setText(selectedCountry);
+                    if (uImg != null) {
+                        Glide.with(MainActivity.this)
+                                .load(uImg)
+                                .into(img);
+
+                    }
+                }
             }
         }
     }
@@ -86,5 +111,22 @@ public class MainActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    private boolean haveNetworkConnection() {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
     }
 }
