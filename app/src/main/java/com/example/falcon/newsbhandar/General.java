@@ -4,9 +4,19 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -60,12 +70,45 @@ public class General extends Fragment {
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_general, container, false);
+        final String apiKey = "fd91ae1d98994c8382d88af8c0174773";
+        final ProgressBar pbar;
+
+        String selectedCountry = MainActivity.pref.getString("country", null);
+        View view = inflater.inflate(R.layout.fragment_general, container, false);
+        pbar=view.findViewById(R.id.pbar);
+        pbar.setVisibility(View.VISIBLE);
+        countryNameAndCodes cnac = new countryNameAndCodes();
+        cnac.enter();
+        final RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        Call<News> news1 = MainActivity.rt.others(cnac.data.get(selectedCountry), apiKey,"general");
+        news1.enqueue(new Callback<News>() {
+            @Override
+            public void onResponse(Call<News> call, Response<News> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getActivity(), "Error", Toast.LENGTH_LONG).show();
+                }
+                News news = response.body();
+                List<Article> articles = news.getArticles();
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                pbar.setVisibility(View.GONE);
+                recyclerView.setAdapter(new newsAdapter(articles));
+
+            }
+
+            @Override
+            public void onFailure(Call<News> call, Throwable t) {
+                Toast.makeText(getActivity(), "error" + t.getMessage().toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+        return view;
     }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

@@ -25,11 +25,18 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity implements Business.OnFragmentInteractionListener,Entertainment.OnFragmentInteractionListener,General.OnFragmentInteractionListener,Headlines.OnFragmentInteractionListener,Health.OnFragmentInteractionListener,Science.OnFragmentInteractionListener,Sports.OnFragmentInteractionListener,Technology.OnFragmentInteractionListener {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
+public class MainActivity extends AppCompatActivity implements Business.OnFragmentInteractionListener, Entertainment.OnFragmentInteractionListener, General.OnFragmentInteractionListener, Headlines.OnFragmentInteractionListener, Health.OnFragmentInteractionListener, Science.OnFragmentInteractionListener, Sports.OnFragmentInteractionListener, Technology.OnFragmentInteractionListener {
+
+    static retrofitNews rt;
     FirebaseAuth mAuth;
     FirebaseUser mUser;
-    TextView name, email,countryNameDraw;
+    TextView name, email, countryNameDraw;
     ImageView img;
     String uName, uEmail;
     private DrawerLayout main_nav_drawer;
@@ -49,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements Business.OnFragme
         connection = haveNetworkConnection();
         if (connection == false) {
             Toast.makeText(MainActivity.this, "Please check your internet connection and try again", Toast.LENGTH_LONG).show();
-            Intent intent=new Intent(MainActivity.this,errorConnect.class);
+            Intent intent = new Intent(MainActivity.this, errorConnect.class);
             startActivity(intent);
             finish();
         } else {
@@ -64,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements Business.OnFragme
             name = headerView.findViewById(R.id.name);
             email = headerView.findViewById(R.id.email);
             img = headerView.findViewById(R.id.img);
-            countryNameDraw=headerView.findViewById(R.id.countryNameDraw);
+            countryNameDraw = headerView.findViewById(R.id.countryNameDraw);
 
             if (mUser == null) {
                 startActivity(new Intent(MainActivity.this, signInOptions.class));
@@ -76,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements Business.OnFragme
                     startActivity(intent);
                     finish();
                 } else {
-                    TabLayout layout=findViewById(R.id.TabLayout);
+                    TabLayout layout = findViewById(R.id.TabLayout);
                     layout.addTab(layout.newTab().setText("Headlines"));
                     layout.addTab(layout.newTab().setText("General"));
                     layout.addTab(layout.newTab().setText("Science"));
@@ -86,8 +93,8 @@ public class MainActivity extends AppCompatActivity implements Business.OnFragme
                     layout.addTab(layout.newTab().setText("Health"));
                     layout.addTab(layout.newTab().setText("Sports"));
 
-                    final ViewPager viewPager=findViewById(R.id.ViewPager);
-                    final PagerAdapter adapter=new PagerAdapter(getSupportFragmentManager(),layout.getTabCount());
+                    final ViewPager viewPager = findViewById(R.id.ViewPager);
+                    final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), layout.getTabCount());
                     viewPager.setAdapter(adapter);
                     viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(layout));
                     layout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -113,13 +120,13 @@ public class MainActivity extends AppCompatActivity implements Business.OnFragme
                     main_nav_drawer.addDrawerListener(toggle);
                     toggle.syncState();
                     uName = mUser.getDisplayName();
-                    if (uName!=null) {
+                    if (uName != null) {
                         name.setText(uName);
                     } else {
                         name.setText("User");
                     }
                     uEmail = mUser.getEmail();
-                    if (uEmail!=null) {
+                    if (uEmail != null) {
                         email.setText(uEmail);
                     } else {
                         email.setVisibility(View.GONE);
@@ -132,6 +139,12 @@ public class MainActivity extends AppCompatActivity implements Business.OnFragme
                                 .into(img);
 
                     }
+
+
+
+                    Retrofit retrofit = new Retrofit.Builder().baseUrl("https://newsapi.org/v2/").addConverterFactory(GsonConverterFactory.create()).build();
+                    rt = retrofit.create(retrofitNews.class);
+
                 }
             }
         }

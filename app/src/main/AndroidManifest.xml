@@ -30,6 +30,9 @@
             >
 
         </activity>
+        <activity android:name=".detailedNews">
+
+        </activity>
         <activity android:name=".errorConnect"
             android:theme="@style/temp"
             android:label="No Internet Connection">
