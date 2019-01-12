@@ -77,7 +77,7 @@ public class Health extends Fragment {
         final ProgressBar pbar;
 
         String selectedCountry = MainActivity.pref.getString("country", null);
-        View view = inflater.inflate(R.layout.fragment_headlines, container, false);
+        View view = inflater.inflate(R.layout.fragment_health, container, false);
         pbar=view.findViewById(R.id.pbar);
         pbar.setVisibility(View.VISIBLE);
         countryNameAndCodes cnac = new countryNameAndCodes();

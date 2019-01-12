@@ -26,7 +26,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 public class signInOptions extends AppCompatActivity implements View.OnClickListener {
     private final int RC_SIGN_IN = 1;
-    private GoogleSignInClient mGoogleSignInClient;
+    static GoogleSignInClient mGoogleSignInClient;
     FirebaseAuth mAuth;
     SignInButton googleSignIn;
     Button pnoSignIn;

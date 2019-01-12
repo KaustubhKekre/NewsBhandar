@@ -38,7 +38,6 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.countryH
         String countryName = details.cNames[i];
         String img = details.data.get(countryName);
         String url = url1 + img + "/shiny/32.png";
-        Log.v("plsssss", url);
         viewHolder.coName.setText(countryName);
         viewHolder.coName.setChecked(lastSelectedPosition == i);
         if (lastSelectedPosition == i) {

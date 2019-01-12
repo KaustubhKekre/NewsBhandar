@@ -23,7 +23,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/D:/Android/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_perm_phone_msg_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/D:/Android/plugins/android/lib/android.jar!/images/material_design_icons/places/ic_pool_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -33,9 +33,10 @@
                         </option>
                         <option name="values">
                           <map>
+                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="65db11" />
-                            <entry key="outputName" value="message" />
-                            <entry key="sourceFile" value="C:\Users\kkekr" />
+                            <entry key="outputName" value="logout" />
+                            <entry key="sourceFile" value="C:\Users\kkekr\Downloads\logout.svg" />
                           </map>
                         </option>
                       </PersistentState>

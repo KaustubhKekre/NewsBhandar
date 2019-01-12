@@ -6,7 +6,9 @@
         <item
             android:id="@+id/nav_headline"
             android:icon="@drawable/headlines"
-            android:title="Headlines" />
+            android:title="Headlines"
+
+           />
         <item
             android:id="@+id/nav_general"
             android:icon="@drawable/general"
@@ -14,32 +16,45 @@
             />
         <item
             android:id="@+id/nav_science"
-            android:title="Science" />
+            android:title="Science"
+            android:icon="@drawable/science"/>
         <item
             android:id="@+id/nav_technology"
-            android:title="Technology" />
+            android:title="Technology"
+            android:icon="@drawable/technology"/>
         <item
             android:id="@+id/nav_entertainment"
-            android:title="Entertainment" />
+            android:title="Entertainment"
+            android:icon="@drawable/entertainment"/>
         <item
             android:id="@+id/nav_business"
-            android:title="Business" />
+            android:title="Business"
+            android:icon="@drawable/business"/>
         <item
             android:id="@+id/nav_health"
-            android:title="Health" />
+            android:title="Health"
+            android:icon="@drawable/health"/>
         <item
             android:id="@+id/nav_sport"
-            android:title="Sports" />
+            android:title="Sports"
+            android:icon="@drawable/sports"/>
 
     </group>
+
+
     <item android:title="Settings"
+
         >
         <menu>
+            <group android:checkableBehavior="single">
             <item android:title="Change Country"
-                android:id="@+id/nav_cCountry"/>
-            <item android:title="Settings"
-                android:id="@+id/nav_settings"
+                android:id="@+id/nav_cCountry"
+                android:icon="@drawable/country"/>
+            <item android:title="Log Out"
+                android:id="@+id/nav_sign"
+                android:icon="@drawable/logout"
                 />
+            </group>
 
         </menu>
     </item>

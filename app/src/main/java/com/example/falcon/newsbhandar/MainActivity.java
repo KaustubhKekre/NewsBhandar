@@ -1,20 +1,24 @@
 package com.example.falcon.newsbhandar;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +26,7 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -34,8 +39,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity implements Business.OnFragmentInteractionListener, Entertainment.OnFragmentInteractionListener, General.OnFragmentInteractionListener, Headlines.OnFragmentInteractionListener, Health.OnFragmentInteractionListener, Science.OnFragmentInteractionListener, Sports.OnFragmentInteractionListener, Technology.OnFragmentInteractionListener {
 
     static retrofitNews rt;
-    FirebaseAuth mAuth;
-    FirebaseUser mUser;
+    public FirebaseAuth mAuth;
+    public FirebaseUser mUser;
     TextView name, email, countryNameDraw;
     ImageView img;
     String uName, uEmail;
@@ -145,10 +150,92 @@ public class MainActivity extends AppCompatActivity implements Business.OnFragme
                     Retrofit retrofit = new Retrofit.Builder().baseUrl("https://newsapi.org/v2/").addConverterFactory(GsonConverterFactory.create()).build();
                     rt = retrofit.create(retrofitNews.class);
 
+                    NavigationView navigationView=findViewById(R.id.nav_view);
+                    navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                        @Override
+                        public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                            switch (menuItem.getItemId())
+                            {
+                                case R.id.nav_headline:
+                                       viewPager.setCurrentItem(0);
+                                    main_nav_drawer.closeDrawer(GravityCompat.START);
+                                    break;
+                                case R.id.nav_general:
+                                    viewPager.setCurrentItem(1);
+                                    main_nav_drawer.closeDrawer(GravityCompat.START);
+                                    break;
+                                case R.id.nav_science:
+                                    viewPager.setCurrentItem(2);
+                                    main_nav_drawer.closeDrawer(GravityCompat.START);
+                                    break;
+                                case R.id.nav_technology:
+                                    viewPager.setCurrentItem(3);
+                                    main_nav_drawer.closeDrawer(GravityCompat.START);
+                                    break;
+                                case R.id.nav_entertainment:
+                                    viewPager.setCurrentItem(4);
+                                    main_nav_drawer.closeDrawer(GravityCompat.START);
+                                    break;
+                                case R.id.nav_business:
+                                    viewPager.setCurrentItem(5);
+                                    main_nav_drawer.closeDrawer(GravityCompat.START);
+                                    break;
+                                case R.id.nav_health:
+                                    viewPager.setCurrentItem(6);
+                                    main_nav_drawer.closeDrawer(GravityCompat.START);
+                                    break;
+                                case R.id.nav_sport:
+                                    viewPager.setCurrentItem(7);
+                                    main_nav_drawer.closeDrawer(GravityCompat.START);
+                                    break;
+                                case R.id.nav_cCountry:
+                                    Intent intent =new Intent(MainActivity.this,countrySelection.class);
+                                    startActivity(intent);
+                                    finish();
+                                    break;
+                                case R.id.nav_sign:
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            switch (which){
+                                                case DialogInterface.BUTTON_POSITIVE:
+
+                                                        FirebaseAuth.getInstance().signOut();
+                                                        editor.clear();
+                                                        editor.commit();
+                                                        Intent intent1 =new Intent(MainActivity.this,signInOptions.class);
+                                                        startActivity(intent1);
+                                                        if(mUser!=null)
+                                                        {
+                                                            mUser=null;
+                                                        }
+                                                        finish();
+
+                                                    break;
+
+                                                case DialogInterface.BUTTON_NEGATIVE:
+                                                    break;
+                                            }
+                                        }
+                                    };
+
+                                    builder.setMessage("Are you sure you want to log out?").setPositiveButton("Yes", dialogClickListener)
+                                            .setNegativeButton("Back", dialogClickListener).show();
+
+                                    break;
+                                 default:break;
+                            }
+
+                            return true;
+                        }
+                    });
+
                 }
             }
         }
     }
+
 
     @Override
     public void onBackPressed() {
